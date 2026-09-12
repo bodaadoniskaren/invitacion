@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Adonis & Karen | Nuestra boda</title>
+<meta name="description" content="Te invitamos a celebrar nuestra boda" />
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<!-- Tailwind CSS (CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          sage: {
+            50: "#f5f7f2",
+            100: "#e8ede0",
+            200: "#d1dcc2",
+            300: "#b0c398",
+            400: "#8fa873",
+            500: "#728d57",
+            600: "#5a7143",
+            700: "#485937",
+            800: "#3b482e",
+            900: "#333e29",
+          },
+          cream: {
+            50: "#fffdf9",
+            100: "#faf6ee",
+            200: "#f4ecdb",
+          },
+        },
+        fontFamily: {
+          script: ["'Great Vibes'", "cursive"],
+          serif: ["'Playfair Display'", "serif"],
+          sans: ["'Poppins'", "sans-serif"],
+        },
+      },
+    },
+  };
+</script>
+
+<!-- AOS (Animate On Scroll) -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+<!-- Swiper -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<style>
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { font-family: 'Poppins', sans-serif; background-color: #fffdf9; color: #3b482e; overflow-x: hidden; width: 100%; }
+  h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+  .font-script { font-family: 'Great Vibes', cursive; }
+
+  .leaf-divider::before,
+  .leaf-divider::after {
+    content: "";
+    display: inline-block;
+    width: 48px;
+    height: 1px;
+    background-color: #8fa873;
+    vertical-align: middle;
+    margin: 0 12px;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(180deg, rgba(51,62,41,0.55) 0%, rgba(51,62,41,0.35) 40%, rgba(51,62,41,0.65) 100%);
+  }
+
+  .swiper-pagination-bullet-active { background-color: #5a7143 !important; }
+  .swiper-button-next, .swiper-button-prev { color: #5a7143 !important; }
+
+  .bounce-arrow { animation: bounceDown 2s infinite; }
+  @keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+
+  /* ===================== SOBRE DE APERTURA ===================== */
+  #envelope-screen {
+    background-color: #f6f1e4;
+    transform-origin: center center;
+    transition: opacity .7s ease-out, transform .7s ease-out, visibility .7s ease-out;
+  }
+  #envelope-screen.opened {
+    opacity: 0;
+    transform: translateY(-4%) scale(1.04);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  #envelope-btn {
+    width: 260px;
+    height: 170px;
+    perspective: 900px;
+  }
+  @media (min-width: 768px) {
+    #envelope-btn { width: 300px; height: 195px; }
+  }
+
+  .envelope-back {
+    position: absolute;
+    inset: 0;
+    background-color: #efe6d2;
+    border: 1px solid #c9c3a8;
+    border-radius: 6px;
+    box-shadow: 0 12px 30px rgba(59, 72, 46, 0.18);
+  }
+
+  .envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 52%;
+    background-color: #e2d7ba;
+    border: 1px solid #c9c3a8;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transform: rotateX(0deg);
+    transition: transform .6s ease;
+    transform-style: preserve-3d;
+    z-index: 2;
+  }
+  #envelope-btn.open .envelope-flap {
+    transform: rotateX(180deg);
+  }
+
+  .envelope-seal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 42px;
+    height: 42px;
+    margin-left: -21px;
+    margin-top: -21px;
+    border-radius: 999px;
+    background-color: #5a7143;
+    color: #fffdf9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.1rem;
+    z-index: 3;
+    transition: opacity .3s ease;
+  }
+  #envelope-btn.open .envelope-seal {
+    opacity: 0;
+  }
+
+  .envelope-sheet {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: -4%;
+    height: 72%;
+    background-color: #e8ede0;
+    border: 1px solid #b0c398;
+    border-radius: 4px;
+    box-shadow: 0 10px 22px rgba(59, 72, 46, 0.18);
+    opacity: 0;
+    transform: translateY(10%) rotate(-1.5deg) scale(0.97);
+    transform-origin: bottom center;
+    transition: opacity .45s ease .5s, transform .85s cubic-bezier(.22,1.4,.36,1) .5s;
+    z-index: 1;
+  }
+  #envelope-btn.open .envelope-sheet {
+    opacity: 1;
+    transform: translateY(-62%) rotate(1deg) scale(1);
+    z-index: 5;
+  }
+
+  .envelope-pulse { animation: envelopePulse 2.2s ease-in-out infinite; }
+  @keyframes envelopePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- Música de fondo: arranca al abrir el sobre (el clic cuenta como interacción del usuario) -->
+<audio id="bg-music" src="audio/musicaBoda.mp3" loop preload="auto"></audio>
+
+<!-- ===================== SOBRE DE APERTURA ===================== -->
+<div id="envelope-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center px-6 text-center">
+  <p class="font-serif italic text-4xl md:text-5xl text-sage-800 leading-tight mb-3">Adonis &amp; Karen</p>
+  <p class="text-lg md:text-xl text-sage-600 mb-10">28 de noviembre de 2026</p>
+
+  <button id="envelope-btn" type="button" aria-label="Abrir invitación" class="envelope-pulse relative">
+    <span class="envelope-back"></span>
+    <span class="envelope-sheet"></span>
+    <span class="envelope-flap"></span>
+    <span class="envelope-seal">A&amp;K</span>
+  </button>
+
+  <p class="uppercase tracking-widest text-xs text-sage-400 mt-8">Toque el sobre para abrir</p>
+</div>
+
+<!-- ===================== NAVBAR ===================== -->
+<!-- ===================== HERO ===================== -->
+<section id="inicio" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="absolute inset-0 bg-cover bg-center scale-110" style="background-image: url('img/Encabezado.jpeg'); filter: blur(6px);"></div>
+  <div class="absolute inset-0 hero-overlay"></div>
+
+  <div class="relative z-10 text-center text-cream-50 px-6" data-aos="fade-up" data-aos-duration="1200">
+    <p class="uppercase tracking-[0.3em] text-sm md:text-base mb-6">Nuestra boda</p>
+    <h1 class="font-serif italic text-5xl md:text-7xl mb-6">Adonis &amp; Karen</h1>
+    <div class="leaf-divider text-cream-100 text-sm mb-6">28 de noviembre de 2026</div>
+    <p class="uppercase tracking-widest text-xs md:text-sm text-cream-100">Guardá la fecha</p>
+  </div>
+
+  <a href="#cuenta-regresiva" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-cream-50 bounce-arrow">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+    </svg>
+  </a>
+</section>
+
+<!-- ===================== FRASE DE BIENVENIDA ===================== -->
+<section class="py-20 px-6 bg-cream-50">
+  <div class="max-w-2xl mx-auto text-center" data-aos="fade-up">
+    <p class="font-serif italic text-xl md:text-2xl text-sage-800 leading-relaxed">
+      El amor verdadero: es paciente, perdona, acepta, ayuda, cree, entiende y nunca se hunde.<br />Nunca falla.
+    </p>
+    <p class="uppercase tracking-[0.2em] text-xs text-sage-500 mt-5">1 Corintios 13: 4-8</p>
+    <div class="leaf-divider mt-8"></div>
+  </div>
+</section>
+
+<!-- ===================== CUENTA REGRESIVA ===================== -->
+<section id="cuenta-regresiva" class="py-20 px-6 bg-sage-700 text-cream-50 text-center">
+  <div data-aos="zoom-in">
+    <p class="uppercase tracking-[0.3em] text-xs mb-3 text-sage-200">Falta muy poco</p>
+    <h2 class="text-3xl md:text-4xl mb-12">Nuestra cuenta regresiva</h2>
+
+    <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+      <div class="bg-sage-800/60 rounded-lg px-6 py-5 min-w-[90px]">
+        <span id="cd-days" class="block text-4xl md:text-5xl font-serif">00</span>
+        <span class="text-xs uppercase tracking-wide text-sage-200">Días</span>
+      </div>
+      <div class="bg-sage-800/60 rounded-lg px-6 py-5 min-w-[90px]">
+        <span id="cd-hours" class="block text-4xl md:text-5xl font-serif">00</span>
+        <span class="text-xs uppercase tracking-wide text-sage-200">Horas</span>
+      </div>
+      <div class="bg-sage-800/60 rounded-lg px-6 py-5 min-w-[90px]">
+        <span id="cd-minutes" class="block text-4xl md:text-5xl font-serif">00</span>
+        <span class="text-xs uppercase tracking-wide text-sage-200">Minutos</span>
+      </div>
+      <div class="bg-sage-800/60 rounded-lg px-6 py-5 min-w-[90px]">
+        <span id="cd-seconds" class="block text-4xl md:text-5xl font-serif">00</span>
+        <span class="text-xs uppercase tracking-wide text-sage-200">Segundos</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ESPACIOS RESERVADOS ===================== -->
+<div id="guest-passes-badge" class="hidden py-8 px-6 bg-sage-50 text-center" style="background-color:#f5f7f2;">
+  <p id="guest-passes-text" class="text-sm md:text-base uppercase tracking-widest text-sage-700"></p>
+</div>
+
+<!-- ===================== EVENTO ===================== -->
+<section id="evento" class="py-20 px-6 bg-cream-50">
+  <div class="max-w-5xl mx-auto text-center mb-16" data-aos="fade-up">
+    <p class="uppercase tracking-[0.3em] text-sage-500 text-xs mb-3">Los detalles</p>
+    <h2 class="text-4xl md:text-5xl text-sage-800">Ceremonia &amp; recepción</h2>
+  </div>
+
+  <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Ceremonia -->
+    <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-sage-100" data-aos="fade-up">
+      <img src="img/Lourdes.webp" alt="Iglesia Nuestra Señora de Lourdes" class="w-full h-48 object-cover" />
+      <div class="p-8 text-center">
+        <h3 class="text-2xl text-sage-800 mb-4">Ceremonia</h3>
+        <div class="space-y-3 text-sage-600 text-sm mb-6">
+          <p class="flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+            28 de noviembre de 2026
+          </p>
+          <p class="flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" /><circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            2:30 PM
+          </p>
+          <p class="flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+            Iglesia Nuestra Señora de Lourdes, San Vito
+          </p>
+        </div>
+        <a href="https://waze.com/ul/hd1sfpvmvy" target="_blank" rel="noopener" class="inline-block border border-sage-500 text-sage-700 text-xs uppercase tracking-wide px-6 py-3 rounded-full hover:bg-sage-500 hover:text-white transition-colors">
+          Cómo llegar
+        </a>
+      </div>
+    </div>
+
+    <!-- Recepción -->
+    <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-sage-100" data-aos="fade-up" data-aos-delay="150">
+      <img src="img/cascata.jpg" alt="Restaurante Cascata Del Bosco" class="w-full h-48 object-cover" />
+      <div class="p-8 text-center">
+        <h3 class="text-2xl text-sage-800 mb-4">Recepción</h3>
+        <div class="space-y-3 text-sage-600 text-sm mb-6">
+          <p class="flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+            28 de noviembre de 2026
+          </p>
+          <p class="flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" /><circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            4:30 PM
+          </p>
+          <p class="flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+            Restaurante Cascata Del Bosco, Linda Vista, San Vito
+          </p>
+        </div>
+        <a href="https://waze.com/ul/hd1t40240d" target="_blank" rel="noopener" class="inline-block border border-sage-500 text-sage-700 text-xs uppercase tracking-wide px-6 py-3 rounded-full hover:bg-sage-500 hover:text-white transition-colors">
+          Cómo llegar
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALERÍA (SWIPER) ===================== -->
+<section id="galeria" class="py-20 px-6 bg-white">
+  <div class="max-w-5xl mx-auto text-center mb-16" data-aos="fade-up">
+    <p class="uppercase tracking-[0.3em] text-sage-500 text-xs mb-3">Momentos</p>
+    <h2 class="text-4xl md:text-5xl text-sage-800">Nuestros recuerdos</h2>
+  </div>
+
+  <div class="max-w-5xl mx-auto" data-aos="fade-up">
+    <div class="swiper gallery-swiper pb-12">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img src="carrusel/Playa.jpeg" alt="Adonis y Karen en la playa" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 62%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/independencia.jpeg" alt="Adonis y Karen en las fiestas de independencia" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 18%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/San_Ramon.jpeg" alt="Adonis y Karen en San Ramón" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 78%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/Zarcero.jpeg" alt="Adonis y Karen en Zarcero" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 45%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/hobbietenando.jpeg" alt="Adonis y Karen en el mirador" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 48%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/Foto_Teotiuacan.jpeg" alt="Adonis y Karen en Teotihuacán" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 82% 68%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/Arco.jpeg" alt="Adonis y Karen en el Arco de Antigua" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 72%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/Colores_ella.jpeg" alt="Karen frente a un mural" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 30% 75%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/Colores_el.jpeg" alt="Adonis frente a un mural" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 75% 75%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/Letty.jpeg" alt="Adonis y Karen retrato de estudio" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 25%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/aeropuerto.jpeg" alt="Adonis y Karen en el aeropuerto" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 72%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/caminando.jpeg" alt="Adonis y Karen caminando junto al lago" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 55%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/pareja.jpeg" alt="Adonis y Karen frente a una iglesia" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 34%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/selfie.jpeg" alt="Adonis y Karen con vista a la montaña" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 50%;" />
+        </div>
+        <div class="swiper-slide">
+          <img src="carrusel/selfieteotiuacan.jpeg" alt="Adonis y Karen en Teotihuacán 2" class="w-full aspect-[4/5] object-cover rounded-xl" style="object-position: 50% 42%;" />
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VESTIMENTA ===================== -->
+<section id="vestimenta" class="py-20 px-6" style="background-color:#f5f7f2;">
+  <div class="max-w-3xl mx-auto text-center" data-aos="fade-up">
+    <p class="uppercase tracking-[0.3em] text-sage-500 text-xs mb-3">Código de vestimenta</p>
+    <h2 class="text-4xl md:text-5xl text-sage-800 mb-10">Semiformal</h2>
+
+    <div class="swiper vestimenta-swiper max-w-xs mx-auto mb-6 pb-10">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide text-center">
+          <img src="img/mujer.png" alt="Mujeres: vestido midi o largo, sandalias o tacones" class="max-h-80 w-auto mx-auto mb-6" />
+          <h3 class="text-lg text-sage-800 mb-1">Mujeres</h3>
+          <p class="text-sage-600 text-sm">Vestido midi o largo, sandalias o tacones.</p>
+        </div>
+        <div class="swiper-slide text-center">
+          <img src="img/hombre.png" alt="Hombres: camisa manga larga, pantalón de vestir y zapato formal" class="max-h-80 w-auto mx-auto mb-6" />
+          <h3 class="text-lg text-sage-800 mb-1">Hombres</h3>
+          <p class="text-sage-600 text-sm">Camisa manga larga, pantalón de vestir y zapato formal.</p>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <p class="text-sage-600 text-sm leading-relaxed mt-8">
+      Evitar color blanco en mujeres.
+    </p>
+  </div>
+</section>
+
+<!-- ===================== MESA DE REGALOS ===================== -->
+<section id="regalos" class="py-20 px-6 bg-white">
+  <div class="max-w-xl mx-auto text-center" data-aos="fade-up">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-sage-500 mx-auto mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-2.25c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v2.25c0 .621.504 1.125 1.125 1.125z" />
+    </svg>
+
+    <h2 class="text-3xl md:text-4xl text-sage-800 mb-6 leading-snug">
+      ¡La asistencia es obligatoria!
+      <br />
+      El regalo es opcional...
+    </h2>
+    <p class="text-sage-600 text-sm leading-relaxed mb-8">
+      El mejor regalo es que estés con nosotros este día, pero si querés hacernos un obsequio,
+      aquí está nuestro número de SINPE.
+    </p>
+
+    <div class="inline-block bg-cream-100 rounded-xl px-8 py-6 text-center">
+      <p class="text-xs uppercase tracking-wide text-sage-500 mb-2">SINPE</p>
+      <p class="text-2xl md:text-3xl font-serif text-sage-800 tracking-wide">8862-9306</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONFIRMACIÓN (RSVP) ===================== -->
+<section id="confirmacion" class="py-20 px-6 bg-sage-800 text-cream-50">
+  <div class="max-w-xl mx-auto text-center mb-12" data-aos="fade-up">
+    <p class="uppercase tracking-[0.3em] text-sage-300 text-xs mb-3">Te esperamos</p>
+    <h2 class="text-3xl md:text-4xl mb-4">Confirmar asistencia a más tardar el 11 de octubre de 2026</h2>
+    <p id="guest-passes-info" class="hidden mt-3 text-xs uppercase tracking-wide text-sage-300"></p>
+  </div>
+
+  <form id="rsvp-form" class="max-w-lg mx-auto bg-cream-50 text-sage-800 rounded-xl p-8 space-y-5 shadow-lg" data-aos="fade-up" data-aos-delay="150">
+    <div>
+      <label for="nombre" class="block text-xs uppercase tracking-wide mb-2">Tu nombre completo</label>
+      <input type="text" id="nombre" name="nombre" required class="w-full border border-sage-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
+    </div>
+
+    <div id="restricciones-persona-1">
+      <!-- restricciones alimentarias de la persona 1, generadas por script.js -->
+    </div>
+
+    <div>
+      <label class="block text-xs uppercase tracking-wide mb-2">¿Asistirás?</label>
+      <div class="flex gap-6 text-sm">
+        <label class="flex items-center gap-2">
+          <input type="radio" name="asistencia" value="si" required class="text-sage-600 focus:ring-sage-400" /> Sí, con gusto
+        </label>
+        <label class="flex items-center gap-2">
+          <input type="radio" name="asistencia" value="no" class="text-sage-600 focus:ring-sage-400" /> No podré asistir
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <label for="acompanantes" class="block text-xs uppercase tracking-wide mb-2">Cantidad de personas que asistirán (incluyéndote)</label>
+      <select id="acompanantes" name="acompanantes" required class="w-full border border-sage-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400">
+        <!-- las opciones se generan según los pases del invitado (script.js) -->
+      </select>
+    </div>
+
+    <div id="acompanantes-nombres" class="space-y-5">
+      <!-- por cada acompañante: campo de nombre + sus restricciones alimentarias (script.js) -->
+    </div>
+
+    <div>
+      <label for="mensaje" class="block text-xs uppercase tracking-wide mb-2">Mensaje para los novios (opcional)</label>
+      <textarea id="mensaje" name="mensaje" rows="3" class="w-full border border-sage-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400"></textarea>
+    </div>
+
+    <button type="submit" id="rsvp-submit-btn" disabled class="w-full bg-sage-600 text-white uppercase text-xs tracking-wide py-3 rounded-lg hover:bg-sage-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-sage-600">
+      Enviar confirmación
+    </button>
+  </form>
+
+  <div id="rsvp-success" class="hidden max-w-lg mx-auto bg-cream-50 text-sage-800 rounded-xl p-10 md:p-12 shadow-lg text-center">
+    <svg id="rsvp-success-icon" xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-6 text-sage-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <h3 id="rsvp-success-heading" class="font-serif italic text-3xl md:text-4xl mb-4 text-sage-800"></h3>
+    <p id="rsvp-success-message" class="text-sage-600 text-sm md:text-base leading-relaxed"></p>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="py-14 px-6 bg-cream-50 text-center">
+  <p class="font-serif italic text-4xl text-sage-700 mb-3">Adonis &amp; Karen</p>
+  <p class="uppercase tracking-[0.3em] text-xs text-sage-500 mb-6">#AdonisYKaren2026</p>
+  <div class="leaf-divider mb-6"></div>
+  <p class="text-xs text-sage-400">Hecho con cariño para nuestro gran día.</p>
+</footer>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<!-- Custom JS -->
+<script src="script.js"></script>
+</body>
+</html>
